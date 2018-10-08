@@ -1,0 +1,9 @@
+".\Objects\STARTUP.obj",
+".\Objects\segment.obj",
+".\Objects\time.obj",
+".\Objects\main.obj",
+".\Objects\key.obj",
+".\Objects\State_Machine.obj",
+".\Objects\Clock_State.obj" 
+TO ".\Objects\SEGMENT" 
+PRINT(".\Listings\SEGMENT.m51") RAMSIZE(256) 

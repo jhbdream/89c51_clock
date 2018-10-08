@@ -1,0 +1,278 @@
+C51 COMPILER V9.00   CLOCK_STATE                                                           12/21/2017 13:33:18 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE CLOCK_STATE
+OBJECT MODULE PLACED IN .\Objects\Clock_State.obj
+COMPILER INVOKED BY: F:\Software_study\Keil_v5\C51\BIN\C51.EXE State\Clock_State.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\seg
+                    -ment;.\time;.\key;.\State_Machine;.\State) DEBUG OBJECTEXTEND PRINT(.\Listings\Clock_State.lst) OBJECT(.\Objects\Clock_S
+                    -tate.obj)
+
+line level    source
+
+   1          #include "Clock_state.h"
+   2          #include "reg51.h"
+   3          #include "segment.h"
+   4          segment SHOW={00,11,22};
+   5          int WatchCount=0;
+   6          //时钟运行
+   7          Trasition STATR_A_E0 = {
+   8              Show_ALL,
+   9                  STATE_A
+  10          };
+  11           
+  12          
+  13          Trasition STATR_A_E1 = {
+  14          
+  15              Switch,
+  16              STATE_B
+  17          };
+  18           
+  19          
+  20          Trasition STATR_A_E2 = {
+  21          
+  22              Switch,
+  23              STATE_E
+  24          };
+  25                  
+  26          Trasition STATR_B_E0 = {
+  27           
+  28              Show_Hour,
+  29                  STATE_B
+  30          };
+  31           
+  32          
+  33          Trasition STATR_B_E1 = {
+  34                  Switch,
+  35                  STATE_C
+  36          
+  37          };
+  38           
+  39          Trasition STATR_B_E2 = {
+  40           
+  41                  Hour_Inc,
+  42                  STATE_B
+  43          };
+  44          
+  45          Trasition STATR_B_E3 = {
+  46              Hour_Dec,
+  47                  STATE_B
+  48              
+  49          };
+  50          
+  51          Trasition STATR_C_E0 = {
+  52           
+  53              Show_Min,
+C51 COMPILER V9.00   CLOCK_STATE                                                           12/21/2017 13:33:18 PAGE 2   
+
+  54                  STATE_C
+  55          };
+  56          
+  57          Trasition STATR_C_E1 = {
+  58           
+  59              Switch,
+  60                  STATE_D
+  61          };
+  62          
+  63          Trasition STATR_C_E2 = {
+  64           
+  65              Min_Dec,
+  66                  STATE_C
+  67          };
+  68          
+  69          Trasition STATR_C_E3 = {
+  70           
+  71              Min_Inc,
+  72                  STATE_C
+  73          };
+  74          
+  75          Trasition STATR_D_E0 = {
+  76           
+  77              Show_Sec,
+  78                  STATE_D
+  79          };
+  80          
+  81          Trasition STATR_D_E1 = {
+  82           
+  83              Switch,
+  84                  STATE_A
+  85          };
+  86          Trasition STATR_D_E2 = {
+  87           
+  88              Sec_Dec,
+  89                  STATE_D
+  90          };
+  91          
+  92          Trasition STATR_D_E3 = {
+  93           
+  94              Sec_Inc,
+  95                  STATE_D
+  96          };
+  97          
+  98          Trasition STATR_E_E0 = {
+  99           
+ 100              
+ 101                  Stopwatch,
+ 102                  STATE_E
+ 103          };
+ 104          
+ 105          Trasition STATR_E_E1 = {
+ 106           
+ 107              Switch,
+ 108                  STATE_A
+ 109          };
+ 110          Trasition STATR_E_E2 = {
+ 111           
+ 112              Start,
+ 113                  STATE_E
+ 114          };
+ 115          
+C51 COMPILER V9.00   CLOCK_STATE                                                           12/21/2017 13:33:18 PAGE 3   
+
+ 116          Trasition STATR_E_E3 = {
+ 117           
+ 118              ZERO,
+ 119                  STATE_E
+ 120          };
+ 121          
+ 122          
+ 123          Trasition NULL = {
+ 124           
+ 125              Switch,
+ 126                  STATE_A
+ 127          };
+ 128          code pTrasition transition_table[5][4] = {
+ 129                  &STATR_A_E0 , &STATR_A_E1, &STATR_A_E2, &NULL,
+ 130                  &STATR_B_E0 , &STATR_B_E1, &STATR_B_E2, &STATR_B_E3,
+ 131                  &STATR_C_E0 , &STATR_C_E1, &STATR_C_E2, &STATR_C_E3,
+ 132                  &STATR_D_E0 , &STATR_D_E1, &STATR_D_E2, &STATR_D_E3,
+ 133                  &STATR_E_E0 , &STATR_E_E1, &STATR_E_E2, &STATR_E_E3
+ 134          
+ 135          };
+ 136           
+ 137          void Show_ALL()
+ 138          {
+ 139   1              SHOW.hour = Time.hour;
+ 140   1              SHOW.min = Time.min;
+ 141   1              SHOW.sec = Time.sec;    
+ 142   1              write_buf( &SHOW );
+ 143   1              
+ 144   1      }
+ 145          
+ 146          void Switch()
+ 147          {
+ 148   1              
+ 149   1      }
+ 150          
+ 151          void Show_Hour()
+ 152          {
+ 153   1              SHOW.hour = Time.hour;
+ 154   1              SHOW.min = NONE;
+ 155   1              SHOW.sec = NONE;        
+ 156   1              write_buf( &SHOW );
+ 157   1      
+ 158   1      
+ 159   1      }
+ 160          void Hour_Inc()
+ 161          {
+ 162   1              Time.hour++;
+ 163   1              if(Time.hour > 23)      
+ 164   1                      Time.hour = 0;
+ 165   1      }
+ 166          
+ 167          void Hour_Dec()
+ 168          {
+ 169   1              Time.hour--;
+ 170   1              if(Time.hour < 0)       
+ 171   1                      Time.hour = 23; 
+ 172   1      }
+ 173          
+ 174          
+ 175          void Show_Min()
+ 176          {
+ 177   1              SHOW.hour =NONE ;
+C51 COMPILER V9.00   CLOCK_STATE                                                           12/21/2017 13:33:18 PAGE 4   
+
+ 178   1              SHOW.min = Time.min;
+ 179   1              SHOW.sec = NONE;
+ 180   1              write_buf( &SHOW );
+ 181   1              
+ 182   1      }
+ 183          void Min_Inc()
+ 184          {
+ 185   1              Time.min++;
+ 186   1              if(Time.min > 59)       
+ 187   1                      Time.min = 0; 
+ 188   1      }
+ 189          void Min_Dec()
+ 190          {
+ 191   1              Time.min--;
+ 192   1              if(Time.min < 0)        
+ 193   1                      Time.min = 59; 
+ 194   1        
+ 195   1      }
+ 196          
+ 197          void Show_Sec()
+ 198          {
+ 199   1              
+ 200   1              SHOW.hour=NONE;
+ 201   1              SHOW.min=NONE;
+ 202   1              SHOW.sec = Time.sec;
+ 203   1              write_buf( &SHOW );
+ 204   1      
+ 205   1      }
+ 206          void Sec_Inc()
+ 207          {
+ 208   1              Time.sec++;
+ 209   1              if(Time.sec > 59)       
+ 210   1                      Time.sec = 0;
+ 211   1      }
+ 212          
+ 213          void Sec_Dec()
+ 214          {
+ 215   1              Time.sec--;
+ 216   1              if(Time.sec < 0)        
+ 217   1                      Time.sec= 59; 
+ 218   1      }
+ 219          
+ 220          
+ 221          void Stopwatch()
+ 222          {
+ 223   1              
+ 224   1              SHOW.hour       = WATCH.min;
+ 225   1              SHOW.min        = WATCH.sec;
+ 226   1              SHOW.sec        = WatchCount;   
+ 227   1              write_buf( &SHOW );     
+ 228   1      
+ 229   1      }
+ 230          
+ 231          void Start()
+ 232          {
+ 233   1              
+ 234   1              
+ 235   1              TR1 = ~TR1;//启动计数
+ 236   1              
+ 237   1      }
+ 238          
+ 239          
+C51 COMPILER V9.00   CLOCK_STATE                                                           12/21/2017 13:33:18 PAGE 5   
+
+ 240          void ZERO()
+ 241          {
+ 242   1              WATCH.min = 0;
+ 243   1              WATCH.sec = 0;
+ 244   1              WatchCount = 0;
+ 245   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    194    ----
+   CONSTANT SIZE    =     60    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     85    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

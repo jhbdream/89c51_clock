@@ -1,0 +1,140 @@
+C51 COMPILER V9.00   SEGMENT                                                               12/21/2017 13:33:17 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE SEGMENT
+OBJECT MODULE PLACED IN .\Objects\segment.obj
+COMPILER INVOKED BY: F:\Software_study\Keil_v5\C51\BIN\C51.EXE segment\segment.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\segme
+                    -nt;.\time;.\key;.\State_Machine;.\State) DEBUG OBJECTEXTEND PRINT(.\Listings\segment.lst) OBJECT(.\Objects\segment.obj)
+
+line level    source
+
+   1          #include"segment.h"
+   2          #include "reg51.h"
+   3          #include "stdio.h"
+   4          #include "time.h"
+   5          #include "intrins.h"
+   6          #define COM   P2
+   7          #define DELAY 2
+   8          #define DATEPORT P0
+   9          
+  10          
+  11          sbit DUAN       =P2^6;
+  12          sbit WEI        =P2^7;
+  13          
+  14          
+  15          char display_buf[7];
+  16          unsigned char code table[]={0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90,0xFF};
+  17          segment Time={00,11,22};
+  18          segment WATCH={00,00,00};
+  19          void clear()
+  20          {
+  21   1              char i = 0; 
+  22   1              for (i = 0; i < 6; i++ )
+  23   1              {
+  24   2                      display_buf[i] = table[SPACE];
+  25   2              }
+  26   1      }
+  27          
+  28          void write_buf( segment * seg)
+  29          {               
+  30   1              if(seg->hour == NONE)
+  31   1              {
+  32   2                      display_buf[0]=table[SPACE] ;
+  33   2                      display_buf[1]=table[SPACE];
+  34   2              }
+  35   1              else
+  36   1              {
+  37   2                      display_buf[1]= table[ seg->hour % 10 ] & ~0X80;
+  38   2                      display_buf[0]= table[ seg->hour / 10 ] ;               
+  39   2              }
+  40   1              
+  41   1              if(seg->min == NONE)
+  42   1              {
+  43   2                      display_buf[2]=table[SPACE];
+  44   2                      display_buf[3]=table[SPACE]  ;
+  45   2              }
+  46   1              else
+  47   1              {
+  48   2                      display_buf[3]= table[ seg->min % 10 ] & ~0X80;
+  49   2                      display_buf[2]= table[ seg->min / 10 ]; 
+  50   2                      
+  51   2              }
+  52   1              if(seg->sec == NONE)
+  53   1              {
+  54   2                      display_buf[4]=table[SPACE];
+C51 COMPILER V9.00   SEGMENT                                                               12/21/2017 13:33:17 PAGE 2   
+
+  55   2                      display_buf[5]=table[SPACE];
+  56   2              }
+  57   1              else
+  58   1              {
+  59   2                      display_buf[5]= table[ seg->sec % 10 ];
+  60   2                      display_buf[4]= table[ seg->sec / 10 ];         
+  61   2              }
+  62   1      }
+  63          
+  64          //void display()
+  65          //{
+  66          //      char i = 0;
+  67          //      
+  68          //      for ( i = 0; i < 6; i++)
+  69          //      {
+  70          //              P1 =  (0X00 | (1 << i));
+  71          //              COM = display_buf[i];
+  72          //              delay(DELAY);
+  73          //              
+  74          //      }
+  75          //      
+  76          //}
+  77          
+  78          void display()
+  79          {
+  80   1              char i = 0,TEMP;
+  81   1              
+  82   1              for ( i = 0; i < 6; i++)
+  83   1              {
+  84   2                      TEMP = (0X00 | (1 << (5-i)));
+  85   2                      
+  86   2                      DUAN = 1;
+  87   2                      DATEPORT = display_buf[i];
+  88   2                      DUAN = 0;
+  89   2                      DATEPORT = 0X00;
+  90   2                              
+  91   2                      WEI = 1;
+  92   2                      DATEPORT =TEMP;
+  93   2                      WEI = 0;                
+  94   2                      DATEPORT = 0XFF;
+  95   2      //              DATEPORT = display_buf[i];
+  96   2      //              DUAN = 1;
+  97   2      //              DUAN = 0;
+  98   2                      
+  99   2                      delay(DELAY);
+ 100   2                      
+ 101   2              }
+ 102   1              
+ 103   1      }
+ 104          
+ 105          void show_num(unsigned char num)
+ 106          {
+ 107   1              P2=table[num];
+ 108   1      
+ 109   1      }
+ 110          
+ 111          
+ 112          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    335    ----
+C51 COMPILER V9.00   SEGMENT                                                               12/21/2017 13:33:17 PAGE 3   
+
+   CONSTANT SIZE    =     11    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     13       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

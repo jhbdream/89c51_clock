@@ -1,0 +1,50 @@
+C51 COMPILER V9.00   TIME                                                                  12/21/2017 13:33:17 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE TIME
+OBJECT MODULE PLACED IN .\Objects\time.obj
+COMPILER INVOKED BY: F:\Software_study\Keil_v5\C51\BIN\C51.EXE time\time.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\segment;.\t
+                    -ime;.\key;.\State_Machine;.\State) DEBUG OBJECTEXTEND PRINT(.\Listings\time.lst) OBJECT(.\Objects\time.obj)
+
+line level    source
+
+   1          #include "stdio.h"
+   2          #include "reg51.h"
+   3          #include "time.h"
+   4          // 定义一个延时xms毫秒的延时函数
+   5          void delay(unsigned int xms)  // xms代表需要延时的毫秒数
+   6          {
+   7   1          unsigned int x,y;
+   8   1          for(x=xms;x>0;x--)
+   9   1              for(y=110;y>0;y--);
+  10   1      }
+  11          
+  12          void TIME_Init()
+  13          {
+  14   1              TMOD = 0x11;                  
+  15   1              TL0 = 0;                   
+  16   1              TH0 = 0;
+  17   1              TL1 = 0;                   
+  18   1              TH1 = 0;
+  19   1              TR0 = 1;
+  20   1              TR1=0;                  //秒表计数不开启
+  21   1              ET1=1;
+  22   1              ET0 = 1;        
+  23   1              EA = 1;      
+  24   1      }
+  25          
+  26          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     53    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,87 @@
+C51 COMPILER V9.00   KEY                                                                   12/21/2017 13:33:18 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE KEY
+OBJECT MODULE PLACED IN .\Objects\key.obj
+COMPILER INVOKED BY: F:\Software_study\Keil_v5\C51\BIN\C51.EXE key\key.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\segment;.\tim
+                    -e;.\key;.\State_Machine;.\State) DEBUG OBJECTEXTEND PRINT(.\Listings\key.lst) OBJECT(.\Objects\key.obj)
+
+line level    source
+
+   1          #include "key.h"
+   2          #include "stdio.h"
+   3          #include "time.h"
+   4          #include "reg51.h"
+   5          sbit Line =P3^4;
+   6          unsigned int key_scan()
+   7          {
+   8   1      #ifdef juzhen
+                      unsigned char i = 0, j = 0, read,temp;
+                      unsigned char key_val = 0;
+                              for ( i = 0; i < 4; i++)
+                              {
+                                      KEY_PORT = ~(1 << i); 
+                                      
+                                      for( j = 0; j < 4; j++)
+                                      {
+                                                      
+                                              temp = KEY_PORT;
+                                              
+                                              if( ~temp & (unsigned char)( 1 << (j + 4) ) )
+                                              {
+                                                      key_val = i * 4 + j + 1;
+                                                      while(~temp & ( 1 << (j + 4) ))
+                                                      {
+                                                              temp = KEY_PORT;
+                                                      }
+                                                              return key_val;
+                                              }
+                                              
+                                      }
+                                      
+                              }
+                      return key_val;
+              #else 
+  35   1              unsigned char i = 0,temp;
+  36   1              unsigned char key_val = 0;
+  37   1                      
+  38   1              Line = 0;       
+  39   1              P2=0xFF;
+  40   1              temp = P2 & 0X07;       
+  41   1              if( temp != 0X07)
+  42   1              {       
+  43   2                      switch(temp)
+  44   2                      {
+  45   3                              case 0x06:      key_val = 1;    break;
+  46   3                              case 0x05:      key_val = 2;    break;
+  47   3                              case 0x03:      key_val = 3;    break;
+  48   3                      
+  49   3                      }
+  50   2              }       
+  51   1              do
+  52   1              {
+  53   2                      P2=0XFF;
+  54   2                      temp = P2 & 0X07;       
+C51 COMPILER V9.00   KEY                                                                   12/21/2017 13:33:18 PAGE 2   
+
+  55   2              
+  56   2              }while(temp != 0X07);
+  57   1      
+  58   1              return key_val;
+  59   1                      
+  60   1      #endif
+  61   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     54    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
